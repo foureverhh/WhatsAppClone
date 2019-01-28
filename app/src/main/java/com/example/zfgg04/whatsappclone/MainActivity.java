@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         FirebaseApp.initializeApp(this);
+        //To check whether user already logged in
+        userIsLoggedIn();
 
         mPhoneNumber = findViewById(R.id.phoneNumber);
         Code = findViewById(R.id.code);
