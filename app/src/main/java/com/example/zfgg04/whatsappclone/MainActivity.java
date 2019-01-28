@@ -1,5 +1,6 @@
 package com.example.zfgg04.whatsappclone;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
@@ -65,7 +67,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void userIsLoggedIn() {
-
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null){
+            startActivity(new Intent(getApplicationContext(), MainPageActivity.class));
+            finish();
+        }
     }
 
     private void sendButtonIsClicked() {
