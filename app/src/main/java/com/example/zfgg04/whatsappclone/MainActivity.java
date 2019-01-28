@@ -22,10 +22,11 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText mPhoneNumber, Code;
+    private EditText mPhoneNumber, mCode;
     private Button mSend;
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+    String mVerificationId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         userIsLoggedIn();
 
         mPhoneNumber = findViewById(R.id.phoneNumber);
-        Code = findViewById(R.id.code);
+        mCode = findViewById(R.id.code);
         mSend = findViewById(R.id.send);
 
         sendButtonIsClicked();
@@ -52,7 +53,20 @@ public class MainActivity extends AppCompatActivity {
             public void onVerificationFailed(FirebaseException e) {
 
             }
+
+            @Override
+            public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                super.onCodeSent(s, forceResendingToken);
+                mVerificationId = s;
+                mSend.setText("Verify code");
+
+            }
         };
+    }
+
+    private void verifyPhoneNumberWithCode() {
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId,mCode.getText().toString());
+        signInWithPhoneAuthCredential(credential);
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {
@@ -80,7 +94,10 @@ public class MainActivity extends AppCompatActivity {
         mSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startPhoneNumberVerification();
+                if(mVerificationId != null)
+                    verifyPhoneNumberWithCode();
+                else
+                    startPhoneNumberVerification();
             }
         });
     }
